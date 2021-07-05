@@ -1,55 +1,25 @@
-import Home from "./src/screen/HomeScreen";
-import User from "./src/screen/Explorer";
-import React, {createContext, useState} from 'react';
-import { Button, View, Text, TextInput } from 'react-native';
+import React, { useState } from "react";
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import HomeScreen from "./src/screen/HomeScreen";
-import Explorer from "./src/screen/Explorer";
-import Account from "./src/screen/Account";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Provider } from "react-redux";
-import store from './src/redux/store';
-import addItem from "./src/screen/addItem";
-import { QueryClient, QueryClientProvider } from "react-query";
+import Home from "./src/screen/Menu"
+import App1 from "./src/screen/App1"
+import TextScreen from "./src/screen/TextScreen";
+
 const Stack = createStackNavigator();
-const Tab = createBottomTabNavigator()
-const queryClient = new QueryClient();
 
-export const AnswerContext = createContext({
-  isLoggedIn: {},
-  setLoggedIn: (data: any) => {},
-});
-
-function App() {
-  const [isLoggedIn, setLoggedIn] = useState(false);
+export default function App () {
     return (
-      <AnswerContext.Provider value={{isLoggedIn, setLoggedIn}}>
-        <QueryClientProvider client={queryClient}>
-        <Provider store={store}>
-
-        
-        <NavigationContainer>
-          {isLoggedIn ? (
-              <Stack.Navigator>
-              <Stack.Screen name=" " component={HomeScreen} />
-              </Stack.Navigator>
-            ) : (
-              
-                <Stack.Navigator>
-                  <Stack.Screen name="Explorer" component={Explorer} /> 
-                  <Stack.Screen name="Account" component={Account} />
-                  <Stack.Screen name="addItem" component={addItem} />
-                </Stack.Navigator>
-              
-            )
-          }
+        <NavigationContainer >
+            <Stack.Navigator screenOptions={{
+                headerShown: false
+            }}>
+                <Stack.Screen name='TextScreen' component={TextScreen}/>
+                <Stack.Screen name='App1' component={App1}/>
+                <Stack.Screen name='Home' component={Home}/>
+                
+            </Stack.Navigator>
         </NavigationContainer>
-        </Provider>
-        </QueryClientProvider>
-      </AnswerContext.Provider>
-    );
-
+        
+    )
 }
-
-export default App;
