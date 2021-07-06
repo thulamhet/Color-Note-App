@@ -7,49 +7,15 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { TouchableOpacity } from "react-native";
 
 const App1 : React.FC<{navigation: any}> = ({navigation}) => {
-    const [modalVisible, setModalVisible] = useState(false);
     return (
         <SafeAreaView style={{flex: 1}}>
-  
-           <Modal 
-           transparent={true}
-           animationType='slide'
-           visible={modalVisible}>
-                <View style={styles.centraView}>
-                    <View style={styles.modalView}>
-                        <View style={{borderBottomWidth: 2, width: 200, alignItems: 'center'}}>
-                            <Text>ADD NOTE</Text>
-                        </View>
-                        <View>
-                            <View style={{flexDirection: 'row', margin: 5}}>
-                                <TouchableOpacity
-                                onPress={() => {
-                                    navigation.navigate('TextScreen')
-                                }}>
-                                    <FontAwesome5  name='square' size={30} color='#010f0d' />
-                                </TouchableOpacity>
-                                <Text style={{fontSize: 15}}>Text</Text>
-                            </View>
-                            <View style={{flexDirection: 'row', margin: 5}}>
-                                <TouchableOpacity>
-                                    <FontAwesome5  name='square' size={30} color='#010f0d' />
-                                </TouchableOpacity>
-                                <Text style={{fontSize: 15}}>Checklist</Text>
-                            </View>
-                        </View>
-                        
-                    </View>
-                </View>
-           </Modal>
-
-
-            <View style={{flexDirection:'row'}}>
+            <View style={styles.taskbar}>
                 <TouchableOpacity onPress={() => {
                     navigation.navigate('Home');
                 }}>
                     <FontAwesome5  name='align-justify' size={30} color='#010f0d' style={{margin: 14}} />
                 </TouchableOpacity>     
-                <Text style={{marginLeft: 50, marginTop: 14, fontSize: 25}}>App color note</Text>
+                <Text style={styles.title}>App color note</Text>
                 <TouchableOpacity onPress={() => {
 
                 }}>
@@ -61,18 +27,24 @@ const App1 : React.FC<{navigation: any}> = ({navigation}) => {
                     <FontAwesome5  name='ellipsis-v' size={30} color='#464948' style={{margin: 14}} />
                 </TouchableOpacity>
             </View>
-            <View style={{flex: 1, borderTopColor: 'black', borderWidth: 2}}>
-                <Text style={{fontSize: 23}}>Please add a new note by clicking the</Text>
-                <View style={{flexDirection: 'row'}}>
-                    <Text style={{fontSize: 23, marginLeft: 100, marginTop: 5}}>Icon</Text>
-                    <FontAwesome5  name='plus-circle' size={30} color='#1eaf36' style={{margin: 8}} />
-                    <Text style={{fontSize: 23, marginTop: 5}}>below</Text>
+            <View style={styles.body}>
+
+                <View style={{marginLeft: 200, marginTop: 500, flexDirection: 'row'}}>
+                    <TouchableOpacity 
+                        style={styles.iconAdd}
+                        onPress={() => {
+
+                    }}>
+                        <FontAwesome5  name='list' size={40} color='#28312a' style={{}} />
+                    </TouchableOpacity>
+                    <TouchableOpacity 
+                        style={styles.iconAdd}
+                        onPress={() => {
+                            navigation.navigate('TextScreen')
+                        }}>
+                        <FontAwesome5  name='file-alt' size={38} color='#28312a' style={{}} />
+                    </TouchableOpacity>
                 </View>
-                <TouchableOpacity onPress={() => {
-                    setModalVisible(true)
-                }}>
-                    <FontAwesome5  name='plus-circle' size={50} color='#1eaf36' style={{marginLeft: 300, marginTop: 450}} />
-                </TouchableOpacity>
             </View>
         </SafeAreaView>
     )
@@ -81,25 +53,35 @@ const App1 : React.FC<{navigation: any}> = ({navigation}) => {
 export default App1;
 
 const styles = StyleSheet.create({
-    modalView: {
-        margin: 20,
+    taskbar: {
+        flexDirection:'row',
+        backgroundColor: 'yellow'
+    },
+    title: {
+        marginLeft: 50,
+        marginTop: 14,
+        fontSize: 25
+    },
+    body:{
+        flex: 1,
+        borderTopColor: 'black',
+        borderWidth: 2
+    },
+    iconAdd: {
+        margin: 10,
         backgroundColor: "white",
         alignItems: "center",
+        justifyContent: 'center',
         shadowColor: "#000",
         shadowOffset: {
-        width: 0,
-        height: 2
+            width: 0,
+            height: 2
         },
-        shadowOpacity: 0.25,
+        shadowOpacity: 0.5,
         shadowRadius: 4,
         elevation: 5,
-        height: 100,
-        width: 200
-        
-    },
-    centraView: {
-        flex: 1,
-        marginTop: 500,
-        marginLeft: 75,
+        height: 70,
+        width: 70,
+        borderRadius: 8
     }
 })
