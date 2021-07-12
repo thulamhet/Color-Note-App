@@ -1,16 +1,31 @@
 import React, { useState } from "react"
-import { Dimensions } from "react-native";
+import { Dimensions, TouchableOpacity } from "react-native";
 import { SafeAreaView, Text, View, StyleSheet, TextInput } from "react-native"
 import SelectMultiple from 'react-native-select-multiple'
-
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 const fruits = ['Apples', 'Oranges', 'Pears']
 
-const Home : React.FC = () => {
+const Menu : React.FC<{navigation: any}> = ({navigation}) => {
     
     return (
-        <SafeAreaView>
-            <View></View>
+        <SafeAreaView style={styles.container}>
+            <TouchableOpacity
+                onPress={()=>{
+                    navigation.navigate('Home')
+                }}
+            >
+                <FontAwesome5 name='plus' size={30}/>
+            </TouchableOpacity>
+            <View>
+                <Text>menu here</Text>
+            </View>
         </SafeAreaView>
     )
 }
-export default Home;
+export default Menu;
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1
+    }
+})

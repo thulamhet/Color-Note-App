@@ -1,17 +1,44 @@
 import React, { useState } from "react";
-import { View, Text, SafeAreaView, StyleSheet, Modal, Alert, Pressable, Button  } from "react-native";
+import { View, Text, SafeAreaView, StyleSheet, Modal, Alert, Pressable, Button, Dimensions  } from "react-native";
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, Image } from "react-native";
 
-const App1 : React.FC<{navigation: any}> = ({navigation}) => {
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+
+const Home : React.FC<{navigation: any}> = ({navigation}) => {
+    const [modalMenuVisible, setModalMenuVisible] = useState(false);
     return (
         <SafeAreaView style={{flex: 1}}>
+
+            {/* MENU SCREEN */}
+            <Modal
+                visible={modalMenuVisible}
+                animationType='slide'
+                transparent={true}
+            >
+                <View style={styles.modalColorView}>
+                    <Image
+                        style={{width: windowWidth*4/5, height: windowHeight/6}}
+                        source={{uri: 'https://play-lh.googleusercontent.com/gcJ1dGTnTJUWezGN__6_BZcS-hGjj4rUv1-SRJDWVlzB_-h0LVfRbUdXMBlspboG484=w512'}}
+                    />
+                    <TouchableOpacity
+                        onPress={()=>{
+                            setModalMenuVisible(!modalMenuVisible)
+                        }}
+                    >
+                        <FontAwesome5 name='plus' size={30}/>
+                    </TouchableOpacity>
+                </View>
+            </Modal>
+
+
             <View style={styles.taskbar}>
                 <TouchableOpacity onPress={() => {
-                    navigation.navigate('Home');
+                    setModalMenuVisible(!modalMenuVisible);
                 }}>
                     <FontAwesome5  name='align-justify' size={30} color='#010f0d' style={{margin: 14}} />
                 </TouchableOpacity>     
@@ -50,7 +77,7 @@ const App1 : React.FC<{navigation: any}> = ({navigation}) => {
     )
 }
 
-export default App1;
+export default Home;
 
 const styles = StyleSheet.create({
     taskbar: {
@@ -65,7 +92,7 @@ const styles = StyleSheet.create({
     body:{
         flex: 1,
         borderTopColor: 'black',
-        borderWidth: 2
+        borderTopWidth: 2
     },
     iconAdd: {
         margin: 10,
@@ -83,5 +110,19 @@ const styles = StyleSheet.create({
         height: 70,
         width: 70,
         borderRadius: 8
-    }
+    },
+    modalColorView: {
+        backgroundColor: "white",
+
+        shadowColor: "#000",
+        shadowOffset: {
+        width: 0,
+        height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+        height: windowHeight,
+        width: windowWidth*4/5,
+    },
 })

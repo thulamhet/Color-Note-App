@@ -17,41 +17,43 @@ const TextScreen : React.FC<{navigation: any}> = ({navigation}) => {
         setbackgroundColor(color);
         setModalColorVisible(false);
     }
-    const [time, setTime] = useState('i');
-    const [date, setDate] = useState('')
+    const [time, setTime] = useState('2:57 am');
+    const [date, setDate] = useState('12/6/2021')
 
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
 
     const showDatePicker = () => {
-      setDatePickerVisibility(true);
+        setDatePickerVisibility(true);
     };
 
     const showTimePicker = () => {
-      setTimePickerVisibility(true);
+        setTimePickerVisibility(true);
     };
   
     const hideDatePicker = () => {
-      setDatePickerVisibility(false);
+        setDatePickerVisibility(false);
     };
 
     const hideTimePicker = () => {
-      setTimePickerVisibility(false);
+        setTimePickerVisibility(false);
     };
   
     const handleDateConfirm = (date:any) => {
-      hideDatePicker();
-      console.log(date.getDate())
-      setDate(date.getDate());
+        hideDatePicker();
+        setDate(date.getDate() + '/' + date.getMonth() + '/' + date.getFullYear());
     };
     const handleTimeConfirm = (time:any) => {
-      hideTimePicker();
-      setTime(time.getTime())
-      console.log(time.getTime())
+        const a = time.getHours >= 12 ? 'am' : 'pm';
+        hideTimePicker();
+        setTime(time.getHours() + ':' + time.getMinutes() + ' ' + a );
+        console.log(time.getTime())
     };
 
     return (
         <SafeAreaView style={{backgroundColor: `${backgroundColor}`, flex: 1}}>
+
+            {/* Change color */}
             <Modal
                 visible={modalColorVisible}
                 animationType='fade'
@@ -84,27 +86,31 @@ const TextScreen : React.FC<{navigation: any}> = ({navigation}) => {
                 </View>
             </Modal>
 
+            {/* Set Reminder */}
             <Modal
                 visible={modalReminderVisible}
                 animationType='fade'
                 transparent={true}
             >
                 <View style={styles.modalReminderView}>
-                    <View style={styles.reminderHead}>
+                    <View style={{backgroundColor: '#e4e70e'}}>
                         <Text style={{fontSize: 25, fontWeight: 'bold', marginLeft: 60, margin: 10}}>Set Reminder</Text>
                     </View>
-                    <View style={styles.reminderBody}>
-                        <View style={{flexDirection: 'row'}}>
+
+                    <View style={{flex: 1, marginLeft: 30, marginTop: 10}}>
+                        <View style={{flexDirection: 'row', margin: 10, marginLeft: 3}}>
                             <Switch
-                                trackColor={{ false: "#6915bd", true: "#020914" }}
-                                thumbColor={reminderEnabled ? "#f5dd4b" : "#f4f3f4"}
+                                trackColor={{ false: "#3e3e3e", true: "#50f08d" }}
+                                thumbColor={reminderEnabled ? "#4de710" : "#f4f3f4"}
                                 ios_backgroundColor="#3e3e3e"
                                 onValueChange={toggleSwitch}
                                 value={reminderEnabled}
                             />
-                            <Text style={{fontSize: 20}}>Enable</Text>
+
+                            <Text style={{fontSize: 20, marginLeft: 15}}>Enable</Text>
                         </View>
-                        <View style={{flexDirection: 'row'}}>
+
+                        <View style={{flexDirection: 'row', margin: 10}}>
                             <TouchableOpacity
                                 onPress={()=> {
                                     showDatePicker();
@@ -112,19 +118,23 @@ const TextScreen : React.FC<{navigation: any}> = ({navigation}) => {
                             >
                                 <FontAwesome5 name='calendar' size={25} color='#a59f9f'/>
                             </TouchableOpacity>
+
                             <DateTimePickerModal
                                     isVisible={isDatePickerVisible}
                                     mode="date"
                                     onConfirm={handleDateConfirm}
                                     onCancel={hideDatePicker}
                                 />
-                            <Text>{date}</Text>
+
+                            <Text style={{fontSize: 20, marginLeft: 28}}>{date}</Text>
                         </View>
-                        <View style={{flexDirection: 'row'}}>
+
+                        <View style={{flexDirection: 'row', margin: 10}}>
                             <TouchableOpacity
                                 onPress={()=> {
                                     showTimePicker();
                                 }}
+                                
                             >
                                 <FontAwesome5 name='clock' size={25} color='#a59f9f'/>
                                 <DateTimePickerModal
@@ -134,20 +144,35 @@ const TextScreen : React.FC<{navigation: any}> = ({navigation}) => {
                                     onCancel={hideTimePicker}
                                 />
                             </TouchableOpacity>
-                            <Text>{time}</Text>
-                            
+
+                            <Text style={{marginLeft: 28, fontSize: 20}}>{time}</Text>
                         </View>
                     </View>
-                    
+                    <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+                        <TouchableOpacity
+                            style={{margin: 20, borderWidth: 1, borderColor: '#363535', width: 90, height: 30, borderRadius: 3, alignItems: 'center'}}
+                            onPress={()=> {
+                                setModalReminderVisible(false);
+                            }}
+                        >
+                            <Text style={{fontSize: 20}}>Cancel</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={{margin: 20, borderWidth: 1, borderColor: '#363535', width: 90, height: 30, borderRadius: 3, alignItems: 'center'}}
+                            onPress={()=> {
+                                setModalReminderVisible(false);
+                            }}
+                        >
+                            <Text style={{fontSize: 20}}>Save</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </Modal>
             
-
-
             <View style={styles.header}>
                 <TouchableOpacity
                     onPress={() => {
-                        navigation.navigate('App1')
+                        navigation.navigate('Home')
                     }}
                     style={{marginLeft: 4}}
                 >
@@ -300,13 +325,5 @@ const styles = StyleSheet.create({
         alignSelf:'center',
         marginTop: windowHeight/3,
     },
-    reminderHead: {
-        backgroundColor: '#e4e70e'
-    },
-    reminderBody: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-    }
   
 })
