@@ -1,0 +1,1 @@
+export const invisible = '#FFFFFF50';

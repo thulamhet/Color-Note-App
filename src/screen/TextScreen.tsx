@@ -3,14 +3,20 @@ import { View,Switch, Text, SafeAreaView, StyleSheet, Modal, Alert, Pressable, B
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import CustomCircle from "../components/CustomCircle";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { changeReminder } from "../redux/action/reminderAction";
+import { connect } from "react-redux";
+import { useNavigation } from "@react-navigation/native";
+import { changeColor } from "../redux/action/colorAction";
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-
-const TextScreen : React.FC<{navigation: any}> = ({navigation}) => {
-    const [reminderEnabled, setReminderEnabled] = useState(false);
+const TextScreen : React.FC<{reminders: any, changeReminder: (data: any) => void}> = ({reminders, changeReminder}) => {
+    const navigation = useNavigation();
     const toggleSwitch = () => setReminderEnabled(previousState => !previousState);
-    const [backgroundColor, setbackgroundColor] = useState('green');
+    const [title, onChangeTitle] = useState('');
+    const [note, onChageNote] = useState('');
+    const [reminderEnabled, setReminderEnabled] = useState(false);
+    const [backgroundColor, setbackgroundColor] = useState('#949090');
     const [modalColorVisible, setModalColorVisible] = useState(false);
     const [modalReminderVisible, setModalReminderVisible] = useState(false);
     const submit = (color: string) => {
@@ -49,6 +55,16 @@ const TextScreen : React.FC<{navigation: any}> = ({navigation}) => {
         setTime(time.getHours() + ':' + time.getMinutes() + ' ' + a );
         console.log(time.getTime())
     };
+
+    const handleSaveNote = () => {
+        let id = reminders?.noteList?.length
+        let {noteList} = reminders;
+        setModalReminderVisible(false);
+        if(title !== "" && note !== "") noteList = [...noteList, [id, title, note]]
+        let updateReminders = {...reminders, noteList: noteList};
+        changeReminder(updateReminders);
+        console.log(reminders)
+    }
 
     return (
         <SafeAreaView style={{backgroundColor: `${backgroundColor}`, flex: 1}}>
@@ -157,10 +173,11 @@ const TextScreen : React.FC<{navigation: any}> = ({navigation}) => {
                         >
                             <Text style={{fontSize: 20}}>Cancel</Text>
                         </TouchableOpacity>
+
                         <TouchableOpacity
                             style={{margin: 20, borderWidth: 1, borderColor: '#363535', width: 90, height: 30, borderRadius: 3, alignItems: 'center'}}
                             onPress={()=> {
-                                setModalReminderVisible(false);
+                                
                             }}
                         >
                             <Text style={{fontSize: 20}}>Save</Text>
@@ -169,6 +186,7 @@ const TextScreen : React.FC<{navigation: any}> = ({navigation}) => {
                 </View>
             </Modal>
             
+            {/* TASK BAR */}
             <View style={styles.header}>
                 <TouchableOpacity
                     onPress={() => {
@@ -196,6 +214,8 @@ const TextScreen : React.FC<{navigation: any}> = ({navigation}) => {
                 </TouchableOpacity>
             </View>
             
+
+            {/* BODY TEXT */}
             <View style={styles.body}>
                 <View style={styles.reminder}>
                     <TouchableOpacity
@@ -213,15 +233,19 @@ const TextScreen : React.FC<{navigation: any}> = ({navigation}) => {
                     <TextInput
                         style={styles.addInputTitle}
                         placeholder='Title'
+                        onChangeText={onChangeTitle}
                     />
                     <TextInput
                         multiline={true}
                         numberOfLines = {16}
                         placeholder='Note'
                         style={styles.textInput}
+                        onChangeText={onChageNote}
                     />
                 </View>
             </View>
+
+            {/* HANDLE TEXT NODE */}
             <View style={styles.footer}>
                 <TouchableOpacity
                     onPress={()=> {
@@ -231,6 +255,7 @@ const TextScreen : React.FC<{navigation: any}> = ({navigation}) => {
                 >
                     <FontAwesome5 name = 'undo' size={60} color='#130202'/>
                 </TouchableOpacity>
+
                 <TouchableOpacity
                     onPress={()=> {
 
@@ -239,19 +264,17 @@ const TextScreen : React.FC<{navigation: any}> = ({navigation}) => {
                 >
                     <FontAwesome5 name = 'redo-alt' size={60} color='#130202'/>
                 </TouchableOpacity>
-                <TouchableOpacity
-                    onPress={()=> {
 
-                    }}
+                <TouchableOpacity
+                    onPress={()=> {handleSaveNote()}}
                 >
-                    <FontAwesome5 name = 'save' size={60} color='#130202'/>
+                    <FontAwesome5 name = 'save' size={60} color='#f4f7fa'/>
                 </TouchableOpacity>
             </View>
 
         </SafeAreaView>
     )
 }
-export default TextScreen;
 
 const styles = StyleSheet.create({
     header: {
@@ -327,3 +350,10 @@ const styles = StyleSheet.create({
     },
   
 })
+
+const mapStateToProps = (state: any) => {
+    const {reminderReducer} = state;
+    return {reminders: reminderReducer};
+}
+
+export default connect (mapStateToProps, {changeReminder: changeReminder})(TextScreen)
