@@ -13,14 +13,11 @@ const Home : React.FC<{reminders: any, changeReminder: (data: any) => void}> = (
     const navigation = useNavigation()
     const [modalMenuVisible, setModalMenuVisible] = useState(false);
     const [modalInforVisible, setModalInforVisible] = useState(false);
-    const {noteList} = reminders;
+    
     const renderItem = ({item}) => (
-        <TouchableOpacity style={{width: windowWidth, height: 70, backgroundColor: 'orange', marginTop: 2}}
-            onPress={()=>{
-                
-            }}
-        >
-            <Text>{item[0]}</Text>
+        <TouchableOpacity style={{width: windowWidth, height: 70, backgroundColor: 'orange', marginTop: 2}}>
+            <Text>{item?.title}</Text>
+            <Text>{item?.note}</Text>
         </TouchableOpacity>
     )
 
@@ -124,11 +121,8 @@ const Home : React.FC<{reminders: any, changeReminder: (data: any) => void}> = (
                     <FlatList
                         data={reminders?.noteList}
                         renderItem={renderItem}
-                        keyExtractor={item => item.id}
+                        keyExtractor={item => item.key}
                     />
-                    {/* <View>
-                        <Text>{reminders?.noteList[3]}</Text>
-                    </View> */}
                 </View>
 
                 {/* TEXT AND LISTVIEW */}

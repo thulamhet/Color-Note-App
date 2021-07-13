@@ -7,6 +7,7 @@ import { changeReminder } from "../redux/action/reminderAction";
 import { connect } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { changeColor } from "../redux/action/colorAction";
+import { Colors } from "react-native/Libraries/NewAppScreen";
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -57,13 +58,16 @@ const TextScreen : React.FC<{reminders: any, changeReminder: (data: any) => void
     };
 
     const handleSaveNote = () => {
-        let id = reminders?.noteList?.length
+        let key = reminders?.noteList?.length
         let {noteList} = reminders;
         setModalReminderVisible(false);
-        if(title !== "" && note !== "") noteList = [...noteList, [id, title, note]]
+        if(title !== "" && note !== "") noteList = [...noteList, {key, title, note}]
         let updateReminders = {...reminders, noteList: noteList};
         changeReminder(updateReminders);
-        console.log(reminders)
+        // let {color} = colors;
+        // let updateColor = {...colors, color: backgroundColor}
+        // changeColor(updateColor);
+        // console.log(colors)
     }
 
     return (
@@ -215,7 +219,7 @@ const TextScreen : React.FC<{reminders: any, changeReminder: (data: any) => void
             </View>
             
 
-            {/* BODY TEXT */}
+            {/* Title and Input Text */}
             <View style={styles.body}>
                 <View style={styles.reminder}>
                     <TouchableOpacity
@@ -245,7 +249,7 @@ const TextScreen : React.FC<{reminders: any, changeReminder: (data: any) => void
                 </View>
             </View>
 
-            {/* HANDLE TEXT NODE */}
+            {/* Handle text note */}
             <View style={styles.footer}>
                 <TouchableOpacity
                     onPress={()=> {
