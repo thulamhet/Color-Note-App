@@ -1,28 +1,46 @@
 import React, { useState } from "react";
-import { View, Text, SafeAreaView, StyleSheet, Modal, Dimensions, FlatList  } from "react-native";
+import { View, Text, SafeAreaView, StyleSheet, Modal, Dimensions, FlatList, Button, DrawerLayoutAndroid  } from "react-native";
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import { TouchableOpacity, Image } from "react-native";
+import { TouchableOpacity, Image, Alert } from "react-native";
 import { changeReminder } from "../redux/action/reminderAction";
 import { connect } from "react-redux";
 import {useNavigation} from '@react-navigation/native';
+import { changeColor } from "../redux/action/colorAction";
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const Home : React.FC<{reminders: any, changeReminder: (data: any) => void}> = ({reminders, changeReminder}) => {
+const Home : React.FC<{reminders: any, changeReminder: (data: any) => void, colors: any, changeColor: (data: any) => void}> = ({reminders, changeReminder, colors, changeColor}) => {
     const navigation = useNavigation()
     const [modalMenuVisible, setModalMenuVisible] = useState(false);
     const [modalInforVisible, setModalInforVisible] = useState(false);
     
     const renderItem = ({item}) => (
-        <TouchableOpacity style={{width: windowWidth, height: 70, backgroundColor: 'orange', marginTop: 2}}>
-            <Text>{item?.title}</Text>
-            <Text>{item?.note}</Text>
+        <TouchableOpacity style={{width: windowWidth, height: 150, backgroundColor: `${colors?.color[item?.key]?.newColor}`,marginVertical: 5, flexDirection: 'row'}}
+            onPress={()=> {
+                navigation.navigate('NoteDetail', {key: item.key})
+            }}
+            onLongPress={()=> {
+                Alert.alert('asdasd')
+            }}
+        >
+            <View style={{margin: 10, justifyContent: 'flex-start', flex: 1}}>
+                <Text>{item?.title}</Text>
+                <Text>{item?.note}</Text>
+            </View>
+            <TouchableOpacity 
+                style={{alignSelf:'center', marginHorizontal: 15}}
+            >
+                <FontAwesome5 name='trash' size={25}/>   
+            </TouchableOpacity>
         </TouchableOpacity>
     )
 
+
     return (
+        
         <SafeAreaView style={{flex: 1}}>
+
             {/* INFORMATION MODAL */}
             <Modal
                 visible={modalInforVisible}
@@ -116,6 +134,7 @@ const Home : React.FC<{reminders: any, changeReminder: (data: any) => void}> = (
             </View>
         
             <View style={styles.body}>
+
                 {/* NOTELISTS */}
                 <View>
                     <FlatList
@@ -160,7 +179,8 @@ const styles = StyleSheet.create({
     body:{
         flex: 1,
         borderTopColor: 'black',
-        borderTopWidth: 2
+        borderTopWidth: 2,
+        padding: 5
     },
     iconAdd: {
         margin: 10,
@@ -213,7 +233,8 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state: any) => {
     const {reminderReducer} = state;
-    return {reminders: reminderReducer};
+    const {colorReducer} = state;
+    return {reminders: reminderReducer, colors: colorReducer};
 };
 
-export default connect (mapStateToProps, {changeReminder: changeReminder})(Home);
+export default connect (mapStateToProps, {changeReminder: changeReminder, changeColor: changeColor})(Home);

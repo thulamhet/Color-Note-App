@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View,Switch, Text, SafeAreaView, StyleSheet, Modal, Alert, Pressable, Button, TextInput, TouchableOpacity, Dimensions  } from "react-native";
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import CustomCircle from "../components/CustomCircle";
@@ -7,28 +7,46 @@ import { changeReminder } from "../redux/action/reminderAction";
 import { connect } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { changeColor } from "../redux/action/colorAction";
-import { Colors } from "react-native/Libraries/NewAppScreen";
-
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-const TextScreen : React.FC<{reminders: any, changeReminder: (data: any) => void}> = ({reminders, changeReminder}) => {
+
+const TextScreen : React.FC<{reminders: any, changeReminder: (data: any) => void, colors: any, changeColor: (data: any) => void}> = ({reminders, changeReminder, colors, changeColor}) => {
     const navigation = useNavigation();
     const toggleSwitch = () => setReminderEnabled(previousState => !previousState);
     const [title, onChangeTitle] = useState('');
     const [note, onChageNote] = useState('');
     const [reminderEnabled, setReminderEnabled] = useState(false);
-    const [backgroundColor, setbackgroundColor] = useState('#949090');
+    const [backgroundColor, setbackgroundColor] = useState('brown');
     const [modalColorVisible, setModalColorVisible] = useState(false);
     const [modalReminderVisible, setModalReminderVisible] = useState(false);
+    const [time, setTime] = useState('2:57 am');
+    const [date, setDate] = useState('12/6/2021')
+    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+    const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
+
     const submit = (color: string) => {
         setbackgroundColor(color);
         setModalColorVisible(false);
     }
-    const [time, setTime] = useState('2:57 am');
-    const [date, setDate] = useState('12/6/2021')
 
-    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-    const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
+    const updateNoteColor = () => {
+        let newColor = `${backgroundColor}`
+        let {color} = colors;
+        color = [...color, {newColor}]
+        let updateColor =  {...colors, color: color};
+        changeColor(updateColor);
+    }
+
+    const handleSaveNote = () => {
+        let key = reminders?.noteList?.length
+        let {noteList} = reminders;
+        setModalReminderVisible(false);
+        noteList = [...noteList, {key, title, note}]
+        let updateReminders = {...reminders, noteList: noteList};
+        changeReminder(updateReminders);
+        console.log(reminders?.noteList);
+        
+    }
 
     const showDatePicker = () => {
         setDatePickerVisibility(true);
@@ -54,21 +72,7 @@ const TextScreen : React.FC<{reminders: any, changeReminder: (data: any) => void
         const a = time.getHours >= 12 ? 'am' : 'pm';
         hideTimePicker();
         setTime(time.getHours() + ':' + time.getMinutes() + ' ' + a );
-        console.log(time.getTime())
     };
-
-    const handleSaveNote = () => {
-        let key = reminders?.noteList?.length
-        let {noteList} = reminders;
-        setModalReminderVisible(false);
-        if(title !== "" && note !== "") noteList = [...noteList, {key, title, note}]
-        let updateReminders = {...reminders, noteList: noteList};
-        changeReminder(updateReminders);
-        // let {color} = colors;
-        // let updateColor = {...colors, color: backgroundColor}
-        // changeColor(updateColor);
-        // console.log(colors)
-    }
 
     return (
         <SafeAreaView style={{backgroundColor: `${backgroundColor}`, flex: 1}}>
@@ -86,10 +90,10 @@ const TextScreen : React.FC<{reminders: any, changeReminder: (data: any) => void
                         >
     
                         </TouchableOpacity>
-                        <CustomCircle colorCode='#c6d861' onPress={()=>submit('#c6d861')}/>
-                        <CustomCircle colorCode='#686161' onPress={()=>submit('#686161')}/>
-                        <CustomCircle colorCode='#46ca57' onPress={()=>submit('#46ca57')}/>
-                        <CustomCircle colorCode='#b67398' onPress={()=>submit('#b67398')}/>
+                        <CustomCircle colorCode='yellow' onPress={()=>submit('yellow')}/>
+                        <CustomCircle colorCode='gray' onPress={()=>submit('gray')}/>
+                        <CustomCircle colorCode='green' onPress={()=>submit('green')}/>
+                        <CustomCircle colorCode='pink' onPress={()=>submit('pink')}/>
                     </View>
                     <View style={{flexDirection: 'row'}}>
                         <TouchableOpacity
@@ -97,10 +101,10 @@ const TextScreen : React.FC<{reminders: any, changeReminder: (data: any) => void
                         >
     
                         </TouchableOpacity>
-                        <CustomCircle colorCode='#61b6d8' onPress={()=>submit('#61b6d8')}/>
-                        <CustomCircle colorCode='#f50707' onPress={()=>submit('#f50707')}/>
-                        <CustomCircle colorCode='#095313' onPress={()=>submit('#095313')}/>
-                        <CustomCircle colorCode='#eea60a' onPress={()=>submit('#eea60a')}/>
+                        <CustomCircle colorCode='blue' onPress={()=>submit('blue')}/>
+                        <CustomCircle colorCode='red' onPress={()=>submit('red')}/>
+                        <CustomCircle colorCode='black' onPress={()=>submit('black')}/>
+                        <CustomCircle colorCode='orange' onPress={()=>submit('orange')}/>
                     </View>
                     
                 </View>
@@ -130,6 +134,7 @@ const TextScreen : React.FC<{reminders: any, changeReminder: (data: any) => void
                             <Text style={{fontSize: 20, marginLeft: 15}}>Enable</Text>
                         </View>
 
+                        {/* Handle date picker */}
                         <View style={{flexDirection: 'row', margin: 10}}>
                             <TouchableOpacity
                                 onPress={()=> {
@@ -148,7 +153,8 @@ const TextScreen : React.FC<{reminders: any, changeReminder: (data: any) => void
 
                             <Text style={{fontSize: 20, marginLeft: 28}}>{date}</Text>
                         </View>
-
+                        
+                        {/* Handle date picker */}
                         <View style={{flexDirection: 'row', margin: 10}}>
                             <TouchableOpacity
                                 onPress={()=> {
@@ -168,6 +174,8 @@ const TextScreen : React.FC<{reminders: any, changeReminder: (data: any) => void
                             <Text style={{marginLeft: 28, fontSize: 20}}>{time}</Text>
                         </View>
                     </View>
+
+                    {/* Handle cancel and save */}
                     <View style={{flexDirection: 'row', justifyContent: 'center'}}>
                         <TouchableOpacity
                             style={{margin: 20, borderWidth: 1, borderColor: '#363535', width: 90, height: 30, borderRadius: 3, alignItems: 'center'}}
@@ -181,7 +189,7 @@ const TextScreen : React.FC<{reminders: any, changeReminder: (data: any) => void
                         <TouchableOpacity
                             style={{margin: 20, borderWidth: 1, borderColor: '#363535', width: 90, height: 30, borderRadius: 3, alignItems: 'center'}}
                             onPress={()=> {
-                                
+                                updateNoteColor()
                             }}
                         >
                             <Text style={{fontSize: 20}}>Save</Text>
@@ -253,24 +261,28 @@ const TextScreen : React.FC<{reminders: any, changeReminder: (data: any) => void
             <View style={styles.footer}>
                 <TouchableOpacity
                     onPress={()=> {
-                        
                     }}
-                    
                 >
                     <FontAwesome5 name = 'undo' size={60} color='#130202'/>
                 </TouchableOpacity>
 
                 <TouchableOpacity
                     onPress={()=> {
-
                     }}
                     style={{marginRight: 90}}
                 >
                     <FontAwesome5 name = 'redo-alt' size={60} color='#130202'/>
                 </TouchableOpacity>
 
+                {/* Handle save */}
                 <TouchableOpacity
-                    onPress={()=> {handleSaveNote()}}
+                    onPress={()=> {
+                        if(title !== "" && note !== "") {
+                            handleSaveNote(), 
+                            updateNoteColor()
+                        }
+                    }
+                }
                 >
                     <FontAwesome5 name = 'save' size={60} color='#f4f7fa'/>
                 </TouchableOpacity>
@@ -288,7 +300,7 @@ const styles = StyleSheet.create({
     },
     body: {
         flex: 1,
-        width: windowWidth - 3,
+        width: windowWidth,
         height: windowHeight - 200,
         backgroundColor: '#ffffffc5',
     },
@@ -357,7 +369,8 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state: any) => {
     const {reminderReducer} = state;
-    return {reminders: reminderReducer};
+    const {colorReducer} = state;
+    return {reminders: reminderReducer, colors: colorReducer};
 }
 
-export default connect (mapStateToProps, {changeReminder: changeReminder})(TextScreen)
+export default connect (mapStateToProps, {changeReminder: changeReminder, changeColor: changeColor})(TextScreen)

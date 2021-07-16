@@ -1,7 +1,7 @@
 import { CHANGE_COLOR } from "../action/colorAction";
 
 const initialValue = {
-    color: ''
+    color: [{newColor: 'pink'}]
 };
 
 export default function colorReducer (state = initialValue, action: any) {
