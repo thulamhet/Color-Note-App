@@ -20,6 +20,7 @@ const Home : React.FC<{reminders: any, changeReminder: (data: any) => void, colo
             onPress={()=> {
                 navigation.navigate('NoteDetail', {key: item.key})
             }}
+            delayLongPress={10}
             onLongPress={()=> {
                 Alert.alert('asdasd')
             }}
@@ -66,41 +67,41 @@ const Home : React.FC<{reminders: any, changeReminder: (data: any) => void, colo
                         source={{uri: 'https://play-lh.googleusercontent.com/gcJ1dGTnTJUWezGN__6_BZcS-hGjj4rUv1-SRJDWVlzB_-h0LVfRbUdXMBlspboG484=w512'}}
                     />
                     <View>
-                        <TouchableOpacity style={{flexDirection: 'row', margin: 17, marginLeft: 35}}
+                        <TouchableOpacity style={styles.iconMore}
                             onPress={()=> {setModalMenuVisible(!modalMenuVisible)}}
                         >
                             <FontAwesome5 name = 'sticky-note' size={30}/>
-                            <Text style={{alignSelf: 'center', marginLeft: 40, fontSize: 20}}>Note</Text>
+                            <Text style={styles.textIconMore}>Note</Text>
                         </TouchableOpacity>              
-                        <TouchableOpacity style={{flexDirection: 'row', margin: 17, marginLeft: 35}}>
+                        <TouchableOpacity style={styles.iconMore}>
                             <FontAwesome5 name = 'calendar-alt' size={30}/>
-                            <Text style={{alignSelf: 'center', marginLeft: 40, fontSize: 20}}>Calendar</Text>
+                            <Text style={styles.textIconMore}>Calendar</Text>
                         </TouchableOpacity>              
-                        <TouchableOpacity style={{flexDirection: 'row', margin: 17, marginLeft: 35}}>
+                        <TouchableOpacity style={styles.iconMore}>
                             <FontAwesome5 name = 'archive' size={30}/>
-                            <Text style={{alignSelf: 'center', marginLeft: 40, fontSize: 20}}>Archive</Text>
+                            <Text style={styles.textIconMore}>Archive</Text>
                         </TouchableOpacity>              
-                        <TouchableOpacity style={{flexDirection: 'row', margin: 17, marginLeft: 35}}>
+                        <TouchableOpacity style={styles.iconMore}>
                             <FontAwesome5 name = 'trash' size={30}/>
-                            <Text style={{alignSelf: 'center', marginLeft: 40, fontSize: 20}}>Trash Can</Text>
+                            <Text style={styles.textIconMore}>Trash Can</Text>
                         </TouchableOpacity>              
-                        <TouchableOpacity style={{flexDirection: 'row', margin: 17, marginLeft: 35}}>
+                        <TouchableOpacity style={styles.iconMore}>
                             <FontAwesome5 name = 'user-cog' size={30}/>
-                            <Text style={{alignSelf: 'center', marginLeft: 40, fontSize: 20}}>Settings</Text>
+                            <Text style={styles.textIconMore}>Settings</Text>
                         </TouchableOpacity>              
-                        <TouchableOpacity style={{flexDirection: 'row', margin: 17, marginLeft: 35}}>
+                        <TouchableOpacity style={styles.iconMore}>
                             <FontAwesome5 name = 'share' size={30}/>
-                            <Text style={{alignSelf: 'center', marginLeft: 40, fontSize: 20}}>Share</Text>
+                            <Text style={styles.textIconMore}>Share</Text>
                         </TouchableOpacity>              
-                        <TouchableOpacity style={{flexDirection: 'row', margin: 17, marginLeft: 35}}>
+                        <TouchableOpacity style={styles.iconMore}>
                             <FontAwesome5 name = 'star-half-alt' size={30}/>
-                            <Text style={{alignSelf: 'center', marginLeft: 40, fontSize: 20}}>Rate</Text>
+                            <Text style={styles.textIconMore}>Rate</Text>
                         </TouchableOpacity>              
-                        <TouchableOpacity style={{flexDirection: 'row', margin: 17, marginLeft: 35}}>
+                        <TouchableOpacity style={styles.iconMore}>
                             <FontAwesome5 name = 'comment-alt' size={30}/>
-                            <Text style={{alignSelf: 'center', marginLeft: 40, fontSize: 20}}>Feedback</Text>
+                            <Text style={styles.textIconMore}>Feedback</Text>
                         </TouchableOpacity>              
-                        <TouchableOpacity style={{flexDirection: 'row', margin: 17, marginLeft: 35}}
+                        <TouchableOpacity style={styles.iconMore}
                             onPress={()=>{
                                 setModalInforVisible(!modalInforVisible);
                                 setModalMenuVisible(!modalMenuVisible);
@@ -229,6 +230,16 @@ const styles = StyleSheet.create({
         marginTop: windowHeight/3,
         marginLeft: 50
     },
+    iconMore: {
+        flexDirection: 'row',
+        margin: 17,
+        marginLeft: 35
+    },
+    textIconMore: {
+        alignSelf: 'center',
+        marginLeft: 40,
+        fontSize: 20
+    }
 })
 
 const mapStateToProps = (state: any) => {

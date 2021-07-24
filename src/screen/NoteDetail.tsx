@@ -9,7 +9,7 @@ import { changeColor } from "../redux/action/colorAction";
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const NoteDetail : React.FC<{route: any,reminders: any, changeReminder: (data: any) => void, colors: any, changeColor: (data: any) => void}> = ({ route,colors, changeColor, reminders, changeReminder}) => {
+const NoteDetail : React.FC<{route: any, reminders: any, changeReminder: (data: any) => void, colors: any, changeColor: (data: any) => void}> = ({ route,colors, changeColor, reminders, changeReminder}) => {
     
     const navigation = useNavigation();
     const {key} = route.params;
@@ -20,21 +20,24 @@ const NoteDetail : React.FC<{route: any,reminders: any, changeReminder: (data: a
     const submit = (color: string) => {
         setbackgroundColor(color);
         setModalColorVisible(false);
-        updateNoteColor();
+        changeNoteColor(color);
     }
-    /**
-     * ! BUG HERE NOT USE
-     */
 
-     const updateNoteColor = () => {
-        let newColor = `${backgroundColor}`
+     const changeNoteColor = (currColor: string) => {
+        let newColor = currColor;
         let {color} = colors;
+        let size = color.length
         color = [...color, {newColor}]
-        console.log(typeof (colors?.color));
-        console.log(colors.color)
-        let updateColor =  {...colors, color: color};
+        let color1 = [];
+        for (let i = 0; i < size; i++) {
+            if(i !== key) {
+                color1.push(color[i])
+            } else {
+                color1.push({newColor: newColor})
+            }
+        }
+        let updateColor =  {...colors, color: color1};
         changeColor(updateColor);
-        
     }
 
     
