@@ -7,6 +7,7 @@ import { changeReminder } from "../redux/action/reminderAction";
 import { connect } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { changeColor } from "../redux/action/colorAction";
+
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
@@ -16,7 +17,7 @@ const TextScreen : React.FC<{reminders: any, changeReminder: (data: any) => void
     const [title, onChangeTitle] = useState('');
     const [note, onChageNote] = useState('');
     const [reminderEnabled, setReminderEnabled] = useState(false);
-    const [backgroundColor, setbackgroundColor] = useState('brown');
+    const [backgroundColor, setbackgroundColor] = useState('#cf740c');
     const [modalColorVisible, setModalColorVisible] = useState(false);
     const [modalReminderVisible, setModalReminderVisible] = useState(false);
     const [time, setTime] = useState('2:57 am');
@@ -68,60 +69,146 @@ const TextScreen : React.FC<{reminders: any, changeReminder: (data: any) => void
         hideDatePicker();
         setDate(date.getDate() + '/' + date.getMonth() + '/' + date.getFullYear());
     };
+
     const handleTimeConfirm = (time:any) => {
         const a = time.getHours >= 12 ? 'am' : 'pm';
         hideTimePicker();
         setTime(time.getHours() + ':' + time.getMinutes() + ' ' + a );
     };
 
-    return (
-        <SafeAreaView style={{backgroundColor: `${backgroundColor}`, flex: 1}}>
+    const ChooseColor = () => {
+        return (
+            <View style={styles.modalColorView}>
+                <View style={{flexDirection: 'row'}}>
+                    <TouchableOpacity
+                        style={{margin: 4}}
+                    ></TouchableOpacity>
+    
+                    <CustomCircle colorCode='#F96D41' onPress={()=>submit('#F96D41')}/>
+                    <CustomCircle colorCode='#64676D' onPress={()=>submit('#64676D')}/>
+                    <CustomCircle colorCode='#1e90ff' onPress={()=>submit('#1e90ff')}/>
+                    <CustomCircle colorCode='#EFEFF0' onPress={()=>submit('#EFEFF0')}/>
+                </View>
+    
+                <View style={{flexDirection: 'row'}}>
+                    <TouchableOpacity
+                        style={{margin: 4}}
+                    ></TouchableOpacity>
+    
+                    <CustomCircle colorCode='#424BAF' onPress={()=>submit('#424BAF')}/>
+                    <CustomCircle colorCode='#C5505E' onPress={()=>submit('#C5505E')}/>
+                    <CustomCircle colorCode='#31Ad66' onPress={()=>submit('#31Ad66')}/>
+                    <CustomCircle colorCode='#213432' onPress={()=>submit('#213432')}/>
+                </View>
+            </View>
+        )
+    }
 
-            {/* Change color */}
-            <Modal
-                visible={modalColorVisible}
-                animationType='fade'
-                transparent={true}
-            >
-                <View style={styles.modalColorView}>
-                    <View style={{flexDirection: 'row'}}>
-                        <TouchableOpacity
-                            style={{margin: 4}}
-                        >
-    
-                        </TouchableOpacity>
-                        <CustomCircle colorCode='yellow' onPress={()=>submit('yellow')}/>
-                        <CustomCircle colorCode='gray' onPress={()=>submit('gray')}/>
-                        <CustomCircle colorCode='green' onPress={()=>submit('green')}/>
-                        <CustomCircle colorCode='pink' onPress={()=>submit('pink')}/>
-                    </View>
-                    <View style={{flexDirection: 'row'}}>
-                        <TouchableOpacity
-                            style={{margin: 4}}
-                        >
-    
-                        </TouchableOpacity>
-                        <CustomCircle colorCode='blue' onPress={()=>submit('blue')}/>
-                        <CustomCircle colorCode='red' onPress={()=>submit('red')}/>
-                        <CustomCircle colorCode='black' onPress={()=>submit('black')}/>
-                        <CustomCircle colorCode='orange' onPress={()=>submit('orange')}/>
-                    </View>
+    const RenderTaskBar = () => {
+        return (
+            <View style={styles.header}>
+                <TouchableOpacity
+                    onPress={() => {
+                        navigation.navigate('Home')
+                    }}
+                    style={{marginLeft: 4}}
+                >
+                    <FontAwesome5  name='arrow-left' size={30} color='#010f0d' />
+                </TouchableOpacity>
+                
+                <Text style={styles.title}>ColorNote</Text>
+
+                <TouchableOpacity
+                    style={{margin: 10}}
+                    onPress={() => {
+                        setModalColorVisible(true);
+                    }}
+                >
+                    <FontAwesome5  name='circle' size={40} color='#3c3d3d' />
+                </TouchableOpacity>
+
+                <TouchableOpacity>
+                   <FontAwesome5  name='ellipsis-v' size={30} color='#010f0d' />
+                </TouchableOpacity>
+            </View>
+        )
+    }
+
+    const RenderTitleAndInputText = () => {
+        return (
+        <View style={styles.body}>
+                <View style={styles.reminder}>
+                    <TouchableOpacity
+                        style={{margin: 10, flexDirection: 'row'}}
+                        onPress={()=> {
+                            setModalReminderVisible(!modalReminderVisible)
+                        }}
+                    >
+                        <FontAwesome5 name='stopwatch' size={30} color ='#050505'/>
+                        <Text style={{marginTop: 6, marginLeft: 5}}>Add Reminder</Text>
+                    </TouchableOpacity>
                     
                 </View>
-            </Modal>
+                <View>
+                    <TextInput
+                        style={styles.addInputTitle}
+                        placeholder='Title'
+                        onChangeText={onChangeTitle}
+                    />
+                    <TextInput
+                        multiline={true}
+                        numberOfLines = {16}
+                        placeholder='Note'
+                        style={styles.textInput}
+                        onChangeText={onChageNote}
+                    />
+                </View>
+            </View>
+        )
+    }
 
-            {/* Set Reminder */}
-            <Modal
-                visible={modalReminderVisible}
-                animationType='fade'
-                transparent={true}
+    const HandleNote = () => {
+        return (
+            <View style={styles.footer}>
+            <TouchableOpacity
+                onPress={()=> {
+                }}
             >
-                <View style={styles.modalReminderView}>
+                <FontAwesome5 name = 'undo' size={60} color='#130202'/>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+                onPress={()=> {
+                }}
+                style={{marginRight: 90}}
+            >
+                <FontAwesome5 name = 'redo-alt' size={60} color='#130202'/>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+                onPress={()=> {
+                    if(title !== "" && note !== "") {
+                        handleSaveNote(), 
+                        updateNoteColor()
+                    }
+                }
+            }
+            >
+                <FontAwesome5 name = 'save' size={60} color='#f4f7fa'/>
+            </TouchableOpacity>
+        </View>
+        )
+    }
+
+    const SetReminder = () => {
+        return (
+            <View style={styles.modalReminderView}>
                     <View style={{backgroundColor: '#e4e70e'}}>
                         <Text style={{fontSize: 25, fontWeight: 'bold', marginLeft: 60, margin: 10}}>Set Reminder</Text>
                     </View>
 
                     <View style={{flex: 1, marginLeft: 30, marginTop: 10}}>
+                        {/* Enable Button */}
                         <View style={{flexDirection: 'row', margin: 10, marginLeft: 3}}>
                             <Switch
                                 trackColor={{ false: "#3e3e3e", true: "#50f08d" }}
@@ -196,97 +283,38 @@ const TextScreen : React.FC<{reminders: any, changeReminder: (data: any) => void
                         </TouchableOpacity>
                     </View>
                 </View>
+        )
+    }
+
+    return (
+        <SafeAreaView style={{backgroundColor: `${backgroundColor}`, flex: 1}}>
+
+            {/* Choose note color */}
+            <Modal
+                visible={modalColorVisible}
+                animationType='fade'
+                transparent={true}
+            >
+                <ChooseColor/>
+            </Modal>
+
+            {/* Set Reminder */}
+            <Modal
+                visible={modalReminderVisible}
+                animationType='fade'
+                transparent={true}
+            >
+                <SetReminder/>
             </Modal>
             
-            {/* TASK BAR */}
-            <View style={styles.header}>
-                <TouchableOpacity
-                    onPress={() => {
-                        navigation.navigate('Home')
-                    }}
-                    style={{marginLeft: 4}}
-                >
-                    <FontAwesome5  name='arrow-left' size={30} color='#010f0d' />
-                </TouchableOpacity>
-                <Text style={styles.title}>ColorNote</Text>
-                <TouchableOpacity
-                    style={{margin: 10}}
-                    onPress={() => {
-                        setModalColorVisible(true);
-                    }}
-                >
-                    <FontAwesome5  name='circle' size={40} color='#3c3d3d' />
-                </TouchableOpacity>
-                <TouchableOpacity 
-                    onPress={() => {
-                        
-                    }}
-                >
-                   <FontAwesome5  name='ellipsis-v' size={30} color='#010f0d' />
-                </TouchableOpacity>
-            </View>
+            {/* Head */}
+            <RenderTaskBar/>
             
-
-            {/* Title and Input Text */}
-            <View style={styles.body}>
-                <View style={styles.reminder}>
-                    <TouchableOpacity
-                        style={{margin: 10, flexDirection: 'row'}}
-                        onPress={()=> {
-                            setModalReminderVisible(!modalReminderVisible)
-                        }}
-                    >
-                        <FontAwesome5 name='stopwatch' size={30} color ='#050505'/>
-                        <Text style={{marginTop: 6, marginLeft: 5}}>Add Reminder</Text>
-                    </TouchableOpacity>
-                    
-                </View>
-                <View>
-                    <TextInput
-                        style={styles.addInputTitle}
-                        placeholder='Title'
-                        onChangeText={onChangeTitle}
-                    />
-                    <TextInput
-                        multiline={true}
-                        numberOfLines = {16}
-                        placeholder='Note'
-                        style={styles.textInput}
-                        onChangeText={onChageNote}
-                    />
-                </View>
-            </View>
+            {/* Body */}
+            <RenderTitleAndInputText/>
 
             {/* Handle text note */}
-            <View style={styles.footer}>
-                <TouchableOpacity
-                    onPress={()=> {
-                    }}
-                >
-                    <FontAwesome5 name = 'undo' size={60} color='#130202'/>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                    onPress={()=> {
-                    }}
-                    style={{marginRight: 90}}
-                >
-                    <FontAwesome5 name = 'redo-alt' size={60} color='#130202'/>
-                </TouchableOpacity>
-
-                {/* Handle save */}
-                <TouchableOpacity
-                    onPress={()=> {
-                        if(title !== "" && note !== "") {
-                            handleSaveNote(), 
-                            updateNoteColor()
-                        }
-                    }
-                }
-                >
-                    <FontAwesome5 name = 'save' size={60} color='#f4f7fa'/>
-                </TouchableOpacity>
-            </View>
+            <HandleNote/>
 
         </SafeAreaView>
     )
@@ -312,9 +340,10 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 30,
-        fontWeight: 'bold',
         marginRight: 120,
         marginLeft: 20,
+        fontFamily: 'Roboto-Black',
+        color: '#fbfbfb'
     },
     reminder: {
         marginLeft: 240,

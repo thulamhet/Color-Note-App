@@ -44,42 +44,36 @@ const NoteDetail : React.FC<{route: any, reminders: any, changeReminder: (data: 
     const {note} = reminders?.noteList[key];
     const {title} = reminders?.noteList[key];
 
-    return (
-        <SafeAreaView style={{backgroundColor: `${backgroundColor}`, flex: 1}}>
-
-            {/* Change color */}
-            <Modal
-                visible={modalColorVisible}
-                animationType='fade'
-                transparent={true}
-            >
-                <View style={styles.modalColorView}>
-                    <View style={{flexDirection: 'row'}}>
-                        <TouchableOpacity
-                            style={{margin: 4}}
-                        >
-                        </TouchableOpacity>
-                        <CustomCircle colorCode='yellow' onPress={()=>submit('yellow')}/>
-                        <CustomCircle colorCode='gray' onPress={()=>submit('gray')}/>
-                        <CustomCircle colorCode='green' onPress={()=>submit('green')}/>
-                        <CustomCircle colorCode='pink' onPress={()=>submit('pink')}/>
-                    </View>
-
-                    <View style={{flexDirection: 'row'}}>
-                        <TouchableOpacity
-                            style={{margin: 4}}
-                        >
+    const ChooseColor = () => {
+        return (
+            <View style={styles.modalColorView}>
+                <View style={{flexDirection: 'row'}}>
+                    <TouchableOpacity
+                        style={{margin: 4}}
+                    ></TouchableOpacity>
     
-                        </TouchableOpacity>
-                        <CustomCircle colorCode='blue' onPress={()=>submit('blue')}/>
-                        <CustomCircle colorCode='red' onPress={()=>submit('red')}/>
-                        <CustomCircle colorCode='black' onPress={()=>submit('black')}/>
-                        <CustomCircle colorCode='orange' onPress={()=>submit('orange')}/>
-                    </View>
+                    <CustomCircle colorCode='#F96D41' onPress={()=>submit('#F96D41')}/>
+                    <CustomCircle colorCode='#64676D' onPress={()=>submit('#64676D')}/>
+                    <CustomCircle colorCode='#1e90ff' onPress={()=>submit('#1e90ff')}/>
+                    <CustomCircle colorCode='#EFEFF0' onPress={()=>submit('#EFEFF0')}/>
                 </View>
-            </Modal>
+    
+                <View style={{flexDirection: 'row'}}>
+                    <TouchableOpacity
+                        style={{margin: 4}}
+                    ></TouchableOpacity>
+    
+                    <CustomCircle colorCode='#424BAF' onPress={()=>submit('#424BAF')}/>
+                    <CustomCircle colorCode='#C5505E' onPress={()=>submit('#C5505E')}/>
+                    <CustomCircle colorCode='#31Ad66' onPress={()=>submit('#31Ad66')}/>
+                    <CustomCircle colorCode='#213432' onPress={()=>submit('#213432')}/>
+                </View>
+            </View>
+        )
+    }
 
-            {/* TASK BAR */}
+    const RenderTaskBar = () => {
+        return (
             <View style={styles.header}>
                 <TouchableOpacity
                     onPress={() => {
@@ -89,7 +83,7 @@ const NoteDetail : React.FC<{route: any, reminders: any, changeReminder: (data: 
                 >
                     <FontAwesome5  name='arrow-left' size={30} color='#010f0d' />
                 </TouchableOpacity>
-
+                
                 <Text style={styles.title}>ColorNote</Text>
 
                 <TouchableOpacity
@@ -101,22 +95,40 @@ const NoteDetail : React.FC<{route: any, reminders: any, changeReminder: (data: 
                     <FontAwesome5  name='circle' size={40} color='#3c3d3d' />
                 </TouchableOpacity>
 
-                <TouchableOpacity 
-                    onPress={() => {
-                    }}
-                >
+                <TouchableOpacity>
                    <FontAwesome5  name='ellipsis-v' size={30} color='#010f0d' />
                 </TouchableOpacity>
             </View>
+        )
+    }
 
-            {/* CONTENT */}
+    const RenderContent = () => {
+        return (
             <View style={styles.body}>
                 <View>
                     <Text style={[styles.text, {fontWeight: 'bold'}]}>{title}</Text>
                     <Text style={styles.text}>{note}</Text>
                 </View>
             </View>
+        )
+    }
 
+    return (
+        <SafeAreaView style={{backgroundColor: `${backgroundColor}`, flex: 1}}>
+            {/* Change color */}
+            <Modal
+                visible={modalColorVisible}
+                animationType='fade'
+                transparent={true}
+            >
+                <ChooseColor/>
+            </Modal>
+
+            {/* TASK BAR */}
+            <RenderTaskBar/>
+
+            {/* CONTENT */}
+            <RenderContent/>
         </SafeAreaView>
     )
 }
